@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     siteName: "Mohammed Aashik Portfolio",
     images: [
       {
-        url: "/images/me.png",
+        url: "/images/me.jpg",
         width: 1200,
         height: 630,
         alt: "Mohammed Aashik | Full-Stack AI Engineer",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     description:
       "Senior Full-Stack Engineer specializing in scalable web & mobile applications, AI, and DevOps.",
     creator: "@mohammedaashik",
-    images: ["/images/me.png"],
+    images: ["/images/me.jpg"],
   },
 };
 
