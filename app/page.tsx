@@ -3,6 +3,7 @@ import { Footer } from "@/components/ui/footer";
 import { Hero } from "@/components/sections/hero";
 import { About } from "@/components/sections/about";
 import { Experience } from "@/components/sections/experience";
+import { Education } from "@/components/sections/education";
 import { Projects } from "@/components/sections/projects";
 import { Skills } from "@/components/sections/skills";
 import { Mentorship } from "@/components/sections/mentorship";
@@ -16,6 +17,7 @@ export default function Home() {
         <Hero />
         <About />
         <Experience />
+        <Education />
         <Projects />
         <Skills />
         <Mentorship />

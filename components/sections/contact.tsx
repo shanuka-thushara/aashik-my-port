@@ -1,3 +1,6 @@
+import { profile } from "console"
+
+```javascript
 "use client";
 
 import { Section } from "@/components/ui/section";
@@ -7,8 +10,45 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { profile } from "@/data/profile";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export function Contact() {
+ const [isSubmitting, setIsSubmitting] = useState(false);
+
+ async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+  setIsSubmitting(true);
+
+  const formData = new FormData(e.currentTarget);
+  const data = Object.fromEntries(formData.entries());
+
+  try {
+   const response = await fetch("/api/contact", {
+    method: "POST",
+    headers: {
+     "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+   });
+
+   if (!response.ok) {
+    throw new Error("Failed to send message");
+   }
+
+   toast.success("Message sent successfully!", {
+    description: "I'll get back to you as soon as possible.",
+   });
+   (e.target as HTMLFormElement).reset();
+  } catch (err) {
+   toast.error("Something went wrong.", {
+    description: "Please try again later or email me directly.",
+   });
+  } finally {
+   setIsSubmitting(false);
+  }
+ }
+
  return (
   <Section id="contact">
    <div className="space-y-12">
@@ -33,7 +73,7 @@ export function Contact() {
          <div>
           <p className="font-medium">Email</p>
           <a
-           href={`mailto:${profile.email}`}
+           href={`mailto:${ profile.email } `}
            className="text-muted-foreground hover:text-primary transition-colors"
           >
            {profile.email}
@@ -47,7 +87,7 @@ export function Contact() {
          <div>
           <p className="font-medium">Phone</p>
           <a
-           href={`tel:${profile.phone}`}
+           href={`tel:${ profile.phone } `}
            className="text-muted-foreground hover:text-primary transition-colors"
           >
            {profile.phone}
@@ -72,26 +112,26 @@ export function Contact() {
        <CardTitle>Send a Message</CardTitle>
       </CardHeader>
       <CardContent>
-       <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+       <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-4">
          <div className="space-y-2">
           <label htmlFor="name" className="text-sm font-medium">
            Name
           </label>
-          <Input id="name" placeholder="John Doe" required />
+          <Input id="name" name="name" placeholder="John Doe" required disabled={isSubmitting} />
          </div>
          <div className="space-y-2">
           <label htmlFor="email" className="text-sm font-medium">
            Email
           </label>
-          <Input id="email" type="email" placeholder="john@example.com" required />
+          <Input id="email" name="email" type="email" placeholder="john@example.com" required disabled={isSubmitting} />
          </div>
         </div>
         <div className="space-y-2">
          <label htmlFor="subject" className="text-sm font-medium">
           Subject
          </label>
-         <Input id="subject" placeholder="Project Inquiry" required />
+         <Input id="subject" name="subject" placeholder="Project Inquiry" required disabled={isSubmitting} />
         </div>
         <div className="space-y-2">
          <label htmlFor="message" className="text-sm font-medium">
@@ -99,13 +139,14 @@ export function Contact() {
          </label>
          <Textarea
           id="message"
+          name="message"
           placeholder="Tell me about your project..."
           className="min-h-[150px]"
           required
+          disabled={isSubmitting}
          />
-        </div>
-        <Button type="submit" className="w-full">
-         Send Message
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+         {isSubmitting ? "Sending..." : "Send Message"}
         </Button>
        </form>
       </CardContent>
